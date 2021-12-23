@@ -9,11 +9,12 @@ import win32api, win32con
 inc1 = [908, 792], [909, 744], [855, 670], [765, 627], [768, 573], [766, 526], [813, 405], [862, 382], [958, 382], [1050, 429], [1100, 453], [1150, 479], [1244, 526], [1150, 576], [1150, 626], [1100, 700], [1100, 750], [1150, 770], [1575, 500], [1480, 450], [1385, 400], [1285, 350], [1200, 300], [1150, 285], [1385, 260], [1430, 285], [1475, 310]
 left = [770, 332], [915, 269], [1055, 190]
 right = [915, 260], [770, 340], [630, 405], [480, 480], [630, 555]
+cbtPos = [1555, 795], [1495, 795], [1435, 795], [1375, 795]
+cbtHP = [1575, 800], [1515, 800], [1455, 800], [1395, 800]
+f2bank = [1577, 167], [1577, 418], [1577, 561], [1196, 301], [1204, 309], [510, 413], [485, 404], [818, 810], [1008, 803], [912, 800], [1008, 802], [320, 455], [320, 455], [1417, 260]
+b2inc = [647, 671], [328, 450], [1203, 407], [1220, 450]
+inc2fish = [345, 743], [342, 600], [1200, 800], [1430, 780], [1577, 798], [1576, 691], [1570, 505], [1582, 454], [1103, 798], [1580, 455]
 
-
-def checkOk():
-    if pyautogui.locateOnScreen('ok.png', region=(290,43,1337,996), confidence=0.9, grayscale=True) != None:
-        click(960, 475)
 
 def lclick(x,y):
     win32api.SetCursorPos((x,y))
@@ -27,15 +28,35 @@ def rclick(x,y):
     time.sleep(0.1)
     win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP,0,0)
 
+def checkOk():
+    if pyautogui.locateOnScreen('ok.png', region=(290,43,1337,996), confidence=0.9, grayscale=True) != None:
+        click(960, 475)
+
+def isded(x, y):
+    if (pyautogui.pixel(x, y)[0] == 67) or (pyautogui.pixel(x, y)[0] == 68):
+        return True
+    else:
+        return False
+
+def isme(x, y):
+    if (pyautogui.pixel(x, y)[2] == 0):
+        return True
+    else:
+        return False
+
 def attack():
+    i = 0
     pyautogui.keyDown('2')
     time.sleep(np.random.uniform(0.1, 0.3))
     pyautogui.keyUp('2')
     time.sleep(np.random.uniform(0.5, 1.5))
-    if pyautogui.pixel(1575, 775)[2] == 255:
-        click(1575, 775)
-    else:
-        click(1515, 775)
+    while isded(cbtPos[i][0], cbtPos[i][1]) == True:
+        i += 1
+    if isme(cbtHP[i][0], cbtHP[i][1]) == True:
+        i += 1
+    while isded(cbtPos[i][0], cbtPos[i][1]) == True:
+        i += 1
+    click(cbtPos[i][0], cbtPos[i][1])
 
 def mve(l, r, way):
     if way == 0:
@@ -43,12 +64,11 @@ def mve(l, r, way):
     else:
         click(right[r][0], right[r][1])
 
-
 def combat():
-    way = 0
-    l = 0
-    r = 0
     if pyautogui.locateOnScreen('pret.png', region=(290,43,1337,996), confidence=0.9, grayscale=True) != None:
+        way = 0
+        l = 0
+        r = 0
         click(606, 402)
         win32api.SetCursorPos((625, 400))
         time.sleep(1)
@@ -84,8 +104,6 @@ def combat():
 #pret X: 1525 Y:  772 RGB: ( 38,  85, 167)
 #cb X: 1549 Y:  775
 #passer X: 1174 Y:  996 RGB: (255, 255, 255)
-
-
 
 def fish(x, y):
     k = 10
