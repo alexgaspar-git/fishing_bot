@@ -14,7 +14,7 @@ cbtHP = [1575, 800], [1515, 800], [1455, 800], [1395, 800]
 f2bank = [1577, 167], [1577, 418], [1577, 561], [1196, 301], [1204, 309], [510, 413], [485, 404], [818, 810], [1008, 803], [912, 800], [1008, 802], [320, 455], [320, 455], [1417, 260]
 b2inc = [647, 671], [328, 450], [1203, 407], [1220, 450]
 inc2fish = [345, 743], [342, 600], [1200, 800], [1430, 780], [1577, 798], [1576, 691], [1570, 505], [1582, 454], [1103, 798], [1580, 455]
-
+bankman = [1008, 348], [1055, 321], [1052, 377], [1101, 351], [1103, 397], [1151, 374]
 
 def lclick(x,y):
     win32api.SetCursorPos((x,y))
@@ -28,9 +28,30 @@ def rclick(x,y):
     time.sleep(0.1)
     win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP,0,0)
 
+def gotoBank():
+    i = 0
+    while i < len(f2bank):
+        lclick(f2bank[i][0], f2bank[i][1])
+        i += 1
+        time.sleep(5)
+
+def gotoInc():
+    i = 0
+    while i < len(b2inc):
+        lclick(b2inc[i][0], b2inc[i][1])
+        i += 1
+        time.sleep(5)
+
+def gotoFish():
+    i = 0
+    while i < len(inc2fish):
+        lclick(inc2fish[i][0], inc2fish[i][1])
+        i += 1
+        time.sleep(5)
+
 def checkOk():
     if pyautogui.locateOnScreen('ok.png', region=(290,43,1337,996), confidence=0.9, grayscale=True) != None:
-        click(960, 475)
+        lclick(960, 475)
 
 def isded(x, y):
     if (pyautogui.pixel(x, y)[0] == 67) or (pyautogui.pixel(x, y)[0] == 68):
@@ -60,22 +81,22 @@ def attack():
 
 def mve(l, r, way):
     if way == 0:
-        click(left[l][0], left[l][1])
+        lclick(left[l][0], left[l][1])
     else:
-        click(right[r][0], right[r][1])
+        lclick(right[r][0], right[r][1])
 
 def combat():
     if pyautogui.locateOnScreen('pret.png', region=(290,43,1337,996), confidence=0.9, grayscale=True) != None:
         way = 0
         l = 0
         r = 0
-        click(606, 402)
+        lclick(606, 402)
         win32api.SetCursorPos((625, 400))
         time.sleep(1)
         if pyautogui.locateOnScreen('skrotum.png', region=(290,43,1337,996), confidence=0.9, grayscale=True) == None:
-            click(1053, 186)
+            lclick(1053, 186)
             way = 1
-        click(1525, 772)
+        lclick(1525, 772)
         time.sleep(10)
         while pyautogui.locateOnScreen('fermer.png', region=(290,43,1337,996), confidence=0.9, grayscale=True) == None:
             if (way == 0) and (l < len(left)):
@@ -96,7 +117,7 @@ def combat():
             attack()
             time.sleep(np.random.uniform(1, 1.6))
             if pyautogui.locateOnScreen('fermer.png', region=(290,43,1337,996), confidence=0.9, grayscale=True) == None:
-                click(1174, 996)
+                lclick(1174, 996)
                 time.sleep(np.random.uniform(7.3, 8.3))
         click(1381, 630)
 
@@ -122,8 +143,47 @@ def fish(x, y):
         lclick(x+k, y+l)
         time.sleep(np.random.uniform(19, 21))
 
+def emptyInv():
+    gotoBank()
+    i = 0
+    while pyautogui.locateOnScreen('consulter.png', region=(290,43,1337,996), confidence=0.9, grayscale=True) == None:
+        rclick(bankman[i][0], bankman[i][1])
+        i += 1
+        time.sleep(0.4)
+        if i == len(bankman):
+            i = 0
+    lclick(432, 480)
+    time.sleep(1)
+    lclick(1495, 260)
+    pyautogui.keyDown('ctrl')
+    for x in range(0, 20, 1):
+        lclick(1306, 355)
+    pyautogui.keyUp('ctrl')
+    time.sleep(0.5)
+    lclick(1535, 261)
+    pyautogui.keyDown('ctrl')
+    for x in range(0, 40, 1):
+        lclick(1306, 355)
+    pyautogui.keyUp('ctrl')
+    time.sleep(0.5)
+    pyautogui.keyDown('esc')
+    time.sleep(0.2)
+    pyautogui.keyUp('esc')
+    gotoInc()
+    gotoFish()
+ 
+def isFull():
+    lclick(1275, 850)
+    if pyautogui.pixel(1192, 449)[1] == 102:
+        lclick(1275, 850)
+        emptyInv()
+    else:
+        lclick(1275, 850)
+
 i = 0
 while keyboard.is_pressed('q') == False:
+    if i % 10 == 0:
+        isFull()
     fish(inc1[i][0], inc1[i][1])
     i += 1
     if i == len(inc1):
