@@ -174,6 +174,7 @@ def emptyInv():
  
 def isFull():
     lclick(1275, 850)
+    time.sleep(1)
     if pyautogui.pixel(1192, 449)[1] == 102:
         lclick(1275, 850)
         emptyInv()
